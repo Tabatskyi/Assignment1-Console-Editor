@@ -37,6 +37,7 @@ int main()
 			break;
 	default:
 		printf("unknown function\n");
+		(void)scanf("%c", &command);
 		goto start;
 			break;
 	}
