@@ -6,10 +6,11 @@
 
 int main()
 {
+	start:
 	char command;
 	printf("> ");
 
-	scanf("%c", &command);
+	(void)scanf("%c", &command);
 
 	switch (command)
 	{
@@ -35,9 +36,11 @@ int main()
 		printf("not implemented yet");
 			break;
 	default:
-		printf("unknown function");
-		break;
+		printf("unknown function\n");
+		goto start;
+			break;
 	}
+	printf("\n");
 
 	FILE* file;
 	char mystring[100];
