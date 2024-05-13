@@ -1,12 +1,48 @@
 #define _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_DEPRECATE  
+#define _CRT_NONSTDC_NO_DEPRECATE
 
 #include <stdio.h>
 
 int main()
 {
+	char command;
+	printf("> ");
+
+	scanf("%c", &command);
+
+	switch (command)
+	{
+	case 'a':
+		printf("not implemented yet");
+			break;
+	case 'n':
+		printf("not implemented yet");
+			break;
+	case 's':
+		printf("not implemented yet");
+			break;
+	case 'l':
+		printf("not implemented yet");
+			break;
+	case 'p':
+		printf("not implemented yet");
+			break;
+	case 'i':
+		printf("not implemented yet");
+			break;
+	case 'f':
+		printf("not implemented yet");
+			break;
+	default:
+		printf("unknown function");
+		break;
+	}
+
 	FILE* file;
 	char mystring[100];
 	file = fopen("MyFile.txt", "r");
+
 	if (file == NULL)
 	{
 		printf("Error opening file");
@@ -16,11 +52,6 @@ int main()
 		if (fgets(mystring, 100, file) != NULL)
 		{
 			printf("%s\n", &mystring);
-			goto nahui;
-
-		nahui:
-			printf("idi nahui\n");
-
 		}
 		fclose(file);
 	}
