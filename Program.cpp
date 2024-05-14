@@ -17,65 +17,86 @@ int main()
 	start:
 	char command;
 	char inputBuffer[MAX_LENGTH];
+	FILE* file;
+	char filename[100] = "myfile.txt";
 	printf(">");
 
 	(void)scanf(" %c", &command);
 
-	printf(">");
-
 	switch (command)
 	{
 	case 'a':
-		printf("Enter text to append: ");
-		fgets(inputBuffer, MAX_LENGTH, stdin);
+		printf(">Enter text to append: ");
+		(void)scanf(" %s", &inputBuffer);
 
-		inputBuffer[strcspn(inputBuffer, "\n")] = 0;
-		strncpy(memory[currentLine], inputBuffer, MAX_LENGTH);
-
-		printf("Text appended.\n");
+		if (strlen(memory[currentLine]) + strlen(inputBuffer) < MAX_LENGTH) 
+		{
+			strcat(memory[currentLine], inputBuffer);
+		}
+		else 
+		{
+			printf("Error: Line length exceeds the maximum allowed.\n");
+		}
 			break;
 	case 'n':
-		printf("not implemented yet");
+		printf(">New line started\n");
+		if (currentLine < MAX_LINES - 1) 
+		{
+			currentLine++;
+		}
+		else 
+		{
+			printf("Error: Reached maximum number of lines.\n");
+		}
 			break;
 	case 's':
-		printf("not implemented yet");
+		file = fopen(filename, "w");
+		if (file != NULL)
+		{
+			for (int i = 0; i <= currentLine; i++) 
+			{
+				fprintf(file, "%s\n", memory[i]);
+			}
+			fclose(file);
+		}
+		else 
+		{
+			printf(">Error opening file\n");
+		}
 			break;
 	case 'l':
-		printf("not implemented yet");
+		file = fopen(filename, "r");
+
+		if (file == NULL)
+		{
+			printf(">Error opening file\n");
+		}
+		else
+		{
+			while (fgets(inputBuffer, MAX_LENGTH, file) != NULL) 
+			{
+				printf("%s", inputBuffer);
+			}
+			fclose(file);
+		}
 			break;
 	case 'p':
-		printf("not implemented yet");
+		for (int i = 0; i <= currentLine; i++) 
+		{
+			printf("%d: %s\n", i + 1, memory[i]);
+		}
 			break;
 	case 'i':
-		printf("not implemented yet");
+		printf(">not implemented yet\n");
 			break;
 	case 'f':
-		printf("not implemented yet");
+		printf(">not implemented yet\n");
 			break;
 	default:
-		printf("unknown function\n");
-		//(void)scanf("%c", &command);
-		goto start;
+		printf(">unknown function\n");
 			break;
 	}
-	printf("\n");
-
-	FILE* file;
-	char mystring[100];
-	file = fopen("MyFile.txt", "r");
-
-	if (file == NULL)
-	{
-		printf("Error opening file");
-	}
-	else
-	{
-		if (fgets(mystring, 100, file) != NULL)
-		{
-			printf("%s\n", &mystring);
-		}
-		fclose(file);
-	}
+	goto start;
 
 	return 0;
 }
