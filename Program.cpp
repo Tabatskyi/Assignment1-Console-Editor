@@ -16,7 +16,7 @@ int main()
 {
 	start:
 	char command;
-	char inputBuffer[MAX_LENGTH];
+	char inputBuffer[MAX_LENGTH] = { 0 };
 	FILE* file;
 	char filename[100] = "myfile.txt";
 	printf(">");
