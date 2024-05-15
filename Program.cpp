@@ -45,136 +45,140 @@ int main() {
     FILE* file;
     char filename[100] = "myfile.txt";
 
-start:
-    printf(">");
-    (void)scanf(" %c", &command);
-
-    switch (command) 
+    do
     {
-    case 'a':
-        printf(">Enter text to append: ");
-        (void)scanf(" %[^\n]s", inputBuffer);
+        printf(">");
+        (void)scanf(" %c", &command);
 
-        if (strlen(memory[currentLine]) + strlen(inputBuffer) < currentLenghNum) 
+        switch (command)
         {
-            strcat(memory[currentLine], inputBuffer);
-        }
-        else 
-        {
-            printf(">Error: Line length out of range\n");
-        }
-        break;
-    case 'n':
-        printf(">New line started\n");
-        if (currentLine < currentLinesNum - 1) 
-        {
-            currentLine++;
-        }
-        else 
-        {
-            printf(">Error: Reached maximum range of lines\n");
-        }
-            break;
-    case 's':
-        printf(">Enter filename for saving: ");
-        (void)scanf(" %s", filename);
+        case 'a':
+            printf(">Enter text to append: ");
+            (void)scanf(" %[^\n]s", inputBuffer);
 
-        file = fopen(filename, "w");
-        if (file != NULL) {
-            for (int i = 0; i <= currentLine; i++) 
+            if (strlen(memory[currentLine]) + strlen(inputBuffer) < currentLenghNum)
             {
-                fprintf(file, "%s\n", memory[i]);
+                strcat(memory[currentLine], inputBuffer);
             }
-            fclose(file);
-            printf(">Save successful\n");
-        }
-        else 
-        {
-            printf(">Error opening file\n");
-        }
-            break;
-    case 'l':
-        printf(">Enter filename for loading: ");
-        (void)scanf(" %s", filename);
-
-        file = fopen(filename, "r");
-        if (file != NULL) 
-        {
-            currentLine = 0;
-            while (fgets(inputBuffer, currentLenghNum, file) != NULL && currentLine < currentLinesNum) 
+            else
             {
-                inputBuffer[strlen(inputBuffer) - 1] = 0;  
-                strcpy(memory[currentLine], inputBuffer);
+                printf(">Error: Line length out of range\n");
+            }
+            break;
+        case 'n':
+            printf(">New line started\n");
+            if (currentLine < currentLinesNum - 1)
+            {
+                currentLine++;
+            }
+            else
+            {
+                printf(">Error: Reached maximum range of lines\n");
+            }
+            break;
+        case 's':
+            printf(">Enter filename for saving: ");
+            (void)scanf(" %s", filename);
 
-                if (currentLine++ >= currentLinesNum) 
+            file = fopen(filename, "w");
+            if (file != NULL) {
+                for (int i = 0; i <= currentLine; i++)
                 {
-                    printf(">Error: Reached maximum capacity\n");
-                    break;
+                    fprintf(file, "%s\n", memory[i]);
                 }
+                fclose(file);
+                printf(">Save successful\n");
             }
-            fclose(file);
-            currentLine--;
-            printf(">Load successful\n");
-        }
-        else 
-        {
-            perror(">Error opening file\n");
-        }
-        break;
-    case 'p':
-        for (int i = 0; i <= currentLine; i++) 
-        {
-            printf("%d: %s\n", i, memory[i]);
-        }
-        break;
-    case 'i':
-        char* firstPart;
-        char* secondPart;
-        int line;
-        int index;
+            else
+            {
+                printf(">Error opening file\n");
+            }
+            break;
+        case 'l':
+            printf(">Enter filename for loading: ");
+            (void)scanf(" %s", filename);
 
-        printf(">Choose line and index: ");
-        (void)scanf("%d %d", &line, &index); 
+            file = fopen(filename, "r");
+            if (file != NULL)
+            {
+                currentLine = 0;
+                while (fgets(inputBuffer, currentLenghNum, file) != NULL && currentLine < currentLinesNum)
+                {
+                    inputBuffer[strlen(inputBuffer) - 1] = 0;
+                    strcpy(memory[currentLine], inputBuffer);
 
-        if (line < 0 || line >= currentLinesNum || index < 0 || index >= currentLenghNum) 
-        {
-            printf(">Error index out of range\n");
+                    if (currentLine++ >= currentLinesNum)
+                    {
+                        printf(">Error: Reached maximum capacity\n");
+                        break;
+                    }
+                }
+                fclose(file);
+                currentLine--;
+                printf(">Load successful\n");
+            }
+            else
+            {
+                perror(">Error opening file\n");
+            }
+            break;
+        case 'p':
+            for (int i = 0; i <= currentLine; i++)
+            {
+                printf("%d: %s\n", i, memory[i]);
+            }
+            break;
+        case 'i':
+            char* firstPart;
+            char* secondPart;
+            int line;
+            int index;
+
+            printf(">Choose line and index: ");
+            (void)scanf("%d %d", &line, &index);
+
+            if (line < 0 || line >= currentLinesNum || index < 0 || index >= currentLenghNum)
+            {
+                printf(">Error index out of range\n");
+                break;
+            }
+
+            printf(">Enter text to insert: ");
+            (void)scanf(" %[^\n]", inputBuffer);
+
+            firstPart = (char*)malloc(currentLenghNum * sizeof(char));
+            secondPart = (char*)malloc(currentLenghNum * sizeof(char));
+
+            strncpy(firstPart, memory[line], index);
+            firstPart[index] = '\0';
+
+            strcpy(secondPart, memory[line] + index);
+
+            if (strlen(firstPart) + strlen(inputBuffer) + strlen(secondPart) < currentLenghNum)
+            {
+                strcat(firstPart, inputBuffer);
+                strcat(firstPart, secondPart);
+                strcpy(memory[line], firstPart);
+            }
+            else
+            {
+                printf(">Error: index out of range\n");
+            }
+
+            free(firstPart);
+            free(secondPart);
+            break;
+        case 'f':
+            printf(">not implemented yet\n");
+            break;
+        case 'q':
+            printf("Goodbye!");
+            break;
+        default:
+            printf(">unknown function\n");
             break;
         }
-
-        printf(">Enter text to insert: ");
-        (void)scanf(" %[^\n]", inputBuffer); 
-
-        firstPart = (char*)malloc(currentLenghNum * sizeof(char));
-        secondPart = (char*)malloc(currentLenghNum * sizeof(char));
-
-        strncpy(firstPart, memory[line], index); 
-        firstPart[index] = '\0';  
-
-        strcpy(secondPart, memory[line] + index); 
-
-        if (strlen(firstPart) + strlen(inputBuffer) + strlen(secondPart) < currentLenghNum) 
-        {
-            strcat(firstPart, inputBuffer);
-            strcat(firstPart, secondPart); 
-            strcpy(memory[line], firstPart);
-        }
-        else 
-        {
-            printf(">Error: index out of range\n");
-        }
-
-        free(firstPart);
-        free(secondPart);
-        break;
-    case 'f':
-        printf(">not implemented yet\n");
-        break;
-    default:
-        printf(">unknown function\n");
-        break;
-    }
-    goto start;
+    } while (command != 'q');
 
     freeMemory(memory);
 
