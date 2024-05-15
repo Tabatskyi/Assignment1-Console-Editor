@@ -62,6 +62,7 @@ int main()
 				fprintf(file, "%s\n", memory[i]);
 			}
 			fclose(file);
+			printf(">Save succesful\n");
 		}
 		else 
 		{
@@ -73,17 +74,27 @@ int main()
 		(void)scanf(" %s", &filename);
 
 		file = fopen(filename, "r");
-		if (file == NULL)
+		if (file != NULL)
 		{
-			printf(">Error opening file\n");
+			currentLine = 0;
+			while (fgets(inputBuffer, MAX_LENGTH, file) != NULL && currentLine < MAX_LINES)
+			{
+				inputBuffer[strlen(inputBuffer) - 1] = 0;
+				strcpy(memory[currentLine], inputBuffer);
+
+				if (currentLine++ >= MAX_LINES)
+				{
+					printf(">Reached maximum capacity\n");
+					break;
+				}
+			}
+			fclose(file);
+			currentLine--;
+			printf(">Load succesful\n");
 		}
 		else
 		{
-			while (fgets(inputBuffer, MAX_LENGTH, file) != NULL) 
-			{
-				strcat(memory[currentLine], inputBuffer);
-			}
-			fclose(file);
+			printf(">Error opening file\n");
 		}
 			break;
 	case 'p':
