@@ -180,8 +180,8 @@ int main() {
 
             printf(">Enter text to search: ");
             (void)scanf(" %[^\n]", inputBuffer);
-            found = false;
 
+            found = false;
             for (int i = 0; i <= currentLine; i++)
             {
                 char* result = strstr(memory[i], inputBuffer);
@@ -200,11 +200,12 @@ int main() {
             {
                 printf(">No occurrence found\n");
             }
-
             break;
+
         case 'q':
             printf(">Goodbye!\n");
             break;
+
         default:
             printf(">unknown function\n");
             break;
