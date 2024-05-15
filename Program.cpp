@@ -176,16 +176,29 @@ int main() {
 
         case 'f':
             int position;
+            bool found;
+
             printf(">Enter text to search: ");
             (void)scanf(" %[^\n]", inputBuffer);
+            found = false;
 
             for (int i = 0; i <= currentLine; i++)
             {
                 char* result = strstr(memory[i], inputBuffer);
 
                 position = result - memory[i];
-                if (position >= 0)
-                    printf(">Finded occurency at %d %d\n", i, position);
+                while (result != NULL)
+                {
+                    position = result - memory[i]; 
+                    printf(">Found occurrence at %d %d\n", i, position);
+                    found = true;
+
+                    result = strstr(result + strlen(inputBuffer), inputBuffer);
+                }
+            }
+            if (!found)
+            {
+                printf(">No occurrence found\n");
             }
 
             break;
