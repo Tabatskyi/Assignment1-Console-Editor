@@ -14,7 +14,8 @@ int currentLine = 0;
 
 void freeMemory(char** memory)
 {
-    for (int i = 0; i < currentLinesNum; i++) {
+    for (int i = 0; i < currentLinesNum; i++) 
+    {
         free(memory[i]);
     }
     free(memory);
@@ -22,11 +23,13 @@ void freeMemory(char** memory)
 
 int main() {
     memory = (char**)malloc(currentLinesNum * sizeof(char*));
-    if (!memory) {
+    if (!memory) 
+    {
         printf("Memory allocation failed.\n");
         return 1;
     }
-    for (int i = 0; i < currentLinesNum; i++) {
+    for (int i = 0; i < currentLinesNum; i++) 
+    {
         memory[i] = (char*)malloc(currentLenghNum * sizeof(char));
         if (!memory[i]) {
             printf("Memory allocation failed.\n");
@@ -34,7 +37,7 @@ int main() {
             freeMemory(memory);
             return 1;
         }
-        memory[i][0] = '\0';  
+        memory[i][0] = 0;  
     }
 
     char command;
@@ -46,55 +49,65 @@ start:
     printf(">");
     (void)scanf(" %c", &command);
 
-    switch (command) {
+    switch (command) 
+    {
     case 'a':
         printf(">Enter text to append: ");
         (void)scanf(" %[^\n]s", inputBuffer);
 
-        if (strlen(memory[currentLine]) + strlen(inputBuffer) < currentLenghNum) {
+        if (strlen(memory[currentLine]) + strlen(inputBuffer) < currentLenghNum) 
+        {
             strcat(memory[currentLine], inputBuffer);
         }
-        else {
-            printf("Error: Line length exceeds the maximum allowed.\n");
+        else 
+        {
+            perror(">Error: Line length exceeds the maximum allowed.\n");
         }
         break;
     case 'n':
         printf(">New line started\n");
-        if (currentLine < currentLinesNum - 1) {
+        if (currentLine < currentLinesNum - 1) 
+        {
             currentLine++;
         }
-        else {
-            printf("Error: Reached maximum number of lines.\n");
+        else 
+        {
+            perror(">Error: Reached maximum number of lines.\n");
         }
-        break;
+            break;
     case 's':
         printf(">Enter filename for saving: ");
         (void)scanf(" %s", filename);
 
         file = fopen(filename, "w");
         if (file != NULL) {
-            for (int i = 0; i <= currentLine; i++) {
+            for (int i = 0; i <= currentLine; i++) 
+            {
                 fprintf(file, "%s\n", memory[i]);
             }
             fclose(file);
             printf(">Save successful\n");
         }
-        else {
+        else 
+        {
             printf(">Error opening file\n");
         }
-        break;
+            break;
     case 'l':
         printf(">Enter filename for loading: ");
         (void)scanf(" %s", filename);
 
         file = fopen(filename, "r");
-        if (file != NULL) {
+        if (file != NULL) 
+        {
             currentLine = 0;
-            while (fgets(inputBuffer, currentLenghNum, file) != NULL && currentLine < currentLinesNum) {
+            while (fgets(inputBuffer, currentLenghNum, file) != NULL && currentLine < currentLinesNum) 
+            {
                 inputBuffer[strlen(inputBuffer) - 1] = 0;  
                 strcpy(memory[currentLine], inputBuffer);
 
-                if (currentLine++ >= currentLinesNum) {
+                if (currentLine++ >= currentLinesNum) 
+                {
                     printf(">Reached maximum capacity\n");
                     break;
                 }
@@ -103,12 +116,14 @@ start:
             currentLine--;
             printf(">Load successful\n");
         }
-        else {
-            printf(">Error opening file\n");
+        else 
+        {
+            perror(">Error opening file\n");
         }
         break;
     case 'p':
-        for (int i = 0; i <= currentLine; i++) {
+        for (int i = 0; i <= currentLine; i++) 
+        {
             printf("%d: %s\n", i + 1, memory[i]);
         }
         break;
