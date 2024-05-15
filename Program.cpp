@@ -65,6 +65,7 @@ int main() {
                 printf(">Error: Line length out of range\n");
             }
             break;
+
         case 'n':
             printf(">New line started\n");
             if (currentLine < currentLinesNum - 1)
@@ -76,6 +77,7 @@ int main() {
                 printf(">Error: Reached maximum range of lines\n");
             }
             break;
+
         case 's':
             printf(">Enter filename for saving: ");
             (void)scanf(" %s", filename);
@@ -94,6 +96,7 @@ int main() {
                 printf(">Error opening file\n");
             }
             break;
+
         case 'l':
             printf(">Enter filename for loading: ");
             (void)scanf(" %s", filename);
@@ -122,12 +125,14 @@ int main() {
                 perror(">Error opening file\n");
             }
             break;
+
         case 'p':
             for (int i = 0; i <= currentLine; i++)
             {
                 printf("%d: %s\n", i, memory[i]);
             }
             break;
+
         case 'i':
             char* firstPart;
             char* secondPart;
@@ -168,11 +173,24 @@ int main() {
             free(firstPart);
             free(secondPart);
             break;
+
         case 'f':
-            printf(">not implemented yet\n");
+            int position;
+            printf(">Enter text to search: ");
+            (void)scanf(" %[^\n]", inputBuffer);
+
+            for (int i = 0; i <= currentLine; i++)
+            {
+                char* result = strstr(memory[i], inputBuffer);
+
+                position = result - memory[i];
+                if (position >= 0)
+                    printf(">Finded occurency at %d %d\n", i, position);
+            }
+
             break;
         case 'q':
-            printf("Goodbye!");
+            printf(">Goodbye!\n");
             break;
         default:
             printf(">unknown function\n");
