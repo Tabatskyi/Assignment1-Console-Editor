@@ -90,6 +90,7 @@ int main()
 			}
 			fclose(file);
 			currentLine--;
+
 			printf(">Load succesful\n");
 		}
 		else
@@ -104,7 +105,18 @@ int main()
 		}
 			break;
 	case 'i':
-		printf(">not implemented yet\n");
+		char indexBuffer[3];
+		printf(">Choose line and index: ");
+		(void)scanf(" %s", &indexBuffer);
+		
+		char* split;
+		split = strtok(indexBuffer, " ");
+
+		while (split != NULL)
+		{
+			printf("%s, ", split);
+			split = strtok(NULL, " ");
+		}
 			break;
 	case 'f':
 		printf(">not implemented yet\n");
