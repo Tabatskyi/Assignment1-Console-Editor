@@ -61,7 +61,7 @@ start:
         }
         else 
         {
-            perror(">Error: Line length exceeds the maximum allowed.\n");
+            printf(">Error: Line length out of range\n");
         }
         break;
     case 'n':
@@ -72,7 +72,7 @@ start:
         }
         else 
         {
-            perror(">Error: Reached maximum number of lines.\n");
+            printf(">Error: Reached maximum range of lines\n");
         }
             break;
     case 's':
@@ -108,7 +108,7 @@ start:
 
                 if (currentLine++ >= currentLinesNum) 
                 {
-                    printf(">Reached maximum capacity\n");
+                    printf(">Error: Reached maximum capacity\n");
                     break;
                 }
             }
@@ -124,18 +124,48 @@ start:
     case 'p':
         for (int i = 0; i <= currentLine; i++) 
         {
-            printf("%d: %s\n", i + 1, memory[i]);
+            printf("%d: %s\n", i, memory[i]);
         }
         break;
     case 'i':
-        int line, index;
-        printf(">Choose line: ");
-        (void)scanf(" %d", &line);
-        printf(">Choose index: ");
-        (void)scanf(" %d", &index);
+        char* firstPart;
+        char* secondPart;
+        int line;
+        int index;
 
+        printf(">Choose line and index: ");
+        (void)scanf("%d %d", &line, &index); 
 
+        if (line < 0 || line >= currentLinesNum || index < 0 || index >= currentLenghNum) 
+        {
+            printf(">Error index out of range\n");
+            break;
+        }
 
+        printf(">Enter text to insert: ");
+        (void)scanf(" %[^\n]", inputBuffer); 
+
+        firstPart = (char*)malloc(currentLenghNum * sizeof(char));
+        secondPart = (char*)malloc(currentLenghNum * sizeof(char));
+
+        strncpy(firstPart, memory[line], index); 
+        firstPart[index] = '\0';  
+
+        strcpy(secondPart, memory[line] + index); 
+
+        if (strlen(firstPart) + strlen(inputBuffer) + strlen(secondPart) < currentLenghNum) 
+        {
+            strcat(firstPart, inputBuffer);
+            strcat(firstPart, secondPart); 
+            strcpy(memory[line], firstPart);
+        }
+        else 
+        {
+            printf(">Error: index out of range\n");
+        }
+
+        free(firstPart);
+        free(secondPart);
         break;
     case 'f':
         printf(">not implemented yet\n");
