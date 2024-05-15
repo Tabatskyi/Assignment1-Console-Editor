@@ -3,6 +3,7 @@
 #define _CRT_NONSTDC_NO_DEPRECATE
 
 #include <stdio.h>
+#include <stdlib.h> 
 #include <string.h>
 
 
@@ -50,6 +51,9 @@ int main()
 		}
 			break;
 	case 's':
+		printf(">Enter filename for saving: ");
+		(void)scanf(" %s", &filename);
+
 		file = fopen(filename, "w");
 		if (file != NULL)
 		{
@@ -65,8 +69,10 @@ int main()
 		}
 			break;
 	case 'l':
-		file = fopen(filename, "r");
+		printf(">Enter filename for loading: ");
+		(void)scanf(" %s", &filename);
 
+		file = fopen(filename, "r");
 		if (file == NULL)
 		{
 			printf(">Error opening file\n");
@@ -75,7 +81,7 @@ int main()
 		{
 			while (fgets(inputBuffer, MAX_LENGTH, file) != NULL) 
 			{
-				printf("%s", inputBuffer);
+				strcat(memory[currentLine], inputBuffer);
 			}
 			fclose(file);
 		}
