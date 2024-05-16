@@ -6,13 +6,13 @@
 #include <stdlib.h> 
 #include <string.h>
 
-int currentLinesNum = 100;
-int currentLenghNum = 256;
+int currentLinesNum;
+int currentLenghNum;
 
 char** memory;
-int currentLine = 0;
+int currentLine;
 
-void freeMemory(char** memory)
+void freeMemory()
 {
     for (int i = 0; i < currentLinesNum; i++) 
     {
@@ -21,24 +21,37 @@ void freeMemory(char** memory)
     free(memory);
 }
 
-int main() {
+int initializeMemory() 
+{
+    currentLine = 0;
+    currentLinesNum = 100;
+    currentLenghNum = 256;
+
     memory = (char**)malloc(currentLinesNum * sizeof(char*));
-    if (!memory) 
+    if (!memory)
     {
-        printf("Memory allocation failed.\n");
+        perror(">Memory allocation failed.\n");
         return 1;
     }
-    for (int i = 0; i < currentLinesNum; i++) 
+    for (int i = 0; i < currentLinesNum; i++)
     {
         memory[i] = (char*)malloc(currentLenghNum * sizeof(char));
-        if (!memory[i]) {
-            printf("Memory allocation failed.\n");
+        if (!memory[i]) 
+        {
+            perror(">Memory allocation failed.\n");
 
-            freeMemory(memory);
+            freeMemory();
             return 1;
         }
-        memory[i][0] = 0;  
+        memory[i][0] = 0;
     }
+    
+}
+
+int main() 
+{
+    if (initializeMemory() == 1)
+        return 1;
 
     char command;
     char* inputBuffer = (char*)malloc(currentLinesNum * sizeof(char));
@@ -202,6 +215,12 @@ int main() {
             }
             break;
 
+        case 'c':
+            freeMemory();
+            printf(">Memory cleaned\n");
+            initializeMemory();
+            break;
+
         case 'q':
             printf(">Goodbye!\n");
             break;
@@ -212,7 +231,7 @@ int main() {
         }
     } while (command != 'q');
 
-    freeMemory(memory);
+    freeMemory();
 
     return 0;
 }
