@@ -24,8 +24,8 @@ void freeMemory()
 int initializeMemory() 
 {
     currentLine = 0;
-    currentLinesNum = 100;
-    currentLenghNum = 256;
+    currentLinesNum = 10;
+    currentLenghNum = 10;
 
     memory = (char**)malloc(currentLinesNum * sizeof(char*));
     if (!memory)
@@ -48,13 +48,39 @@ int initializeMemory()
     
 }
 
+
+int changeCapacity() 
+{
+    int newLinesNum = currentLinesNum * 2;
+    char** newMemory = (char**)realloc(memory, newLinesNum * sizeof(char*));
+    if (!newMemory) 
+    {
+        perror("Memory reallocation failed");
+        return 1;
+    }
+    memory = newMemory;
+    for (int i = currentLinesNum; i < newLinesNum; i++) 
+    {
+        memory[i] = (char*)malloc(currentLenghNum * sizeof(char));
+        if (!memory[i]) {
+            perror("Memory allocation failed for new lines");
+            return 1;
+        }
+        memory[i][0] = 0;
+    }
+    currentLinesNum = newLinesNum;
+    printf("Changed succesfully");
+}
+
+
+
 int main() 
 {
     if (initializeMemory() == 1)
         return 1;
 
     char command;
-    char* inputBuffer = (char*)malloc(currentLinesNum * sizeof(char));
+    char* inputBuffer = (char*)malloc(currentLenghNum * sizeof(char));
     FILE* file;
     char filename[100] = "myfile.txt";
 
@@ -75,7 +101,8 @@ int main()
             }
             else
             {
-                printf(">Error: Line length out of range\n");
+                changeCapacity();
+                strcat(memory[currentLine], inputBuffer);
             }
             break;
 
@@ -87,7 +114,8 @@ int main()
             }
             else
             {
-                printf(">Error: Reached maximum range of lines\n");
+                changeCapacity();
+                currentLine++;
             }
             break;
 
@@ -96,7 +124,8 @@ int main()
             (void)scanf(" %s", filename);
 
             file = fopen(filename, "w");
-            if (file != NULL) {
+            if (file != NULL) 
+            {
                 for (int i = 0; i <= currentLine; i++)
                 {
                     fprintf(file, "%s\n", memory[i]);
@@ -125,8 +154,7 @@ int main()
 
                     if (currentLine++ >= currentLinesNum)
                     {
-                        printf(">Error: Reached maximum capacity\n");
-                        break;
+                        changeCapacity();
                     }
                 }
                 fclose(file);
@@ -149,16 +177,15 @@ int main()
         case 'i':
             char* firstPart;
             char* secondPart;
-            int line;
-            int index;
+            unsigned int line;
+            unsigned int index;
 
             printf(">Choose line and index: ");
-            (void)scanf("%d %d", &line, &index);
+            (void)scanf("%u %u", &line, &index);
 
             if (line < 0 || line >= currentLinesNum || index < 0 || index >= currentLenghNum)
             {
-                printf(">Error index out of range\n");
-                break;
+                changeCapacity();
             }
 
             printf(">Enter text to insert: ");
@@ -168,15 +195,13 @@ int main()
             secondPart = (char*)malloc(currentLenghNum * sizeof(char));
 
             strncpy(firstPart, memory[line], index);
-            firstPart[index] = '\0';
+            firstPart[index] = 0;
 
             strcpy(secondPart, memory[line] + index);
 
             if (strlen(firstPart) + strlen(inputBuffer) + strlen(secondPart) < currentLenghNum)
             {
-                strcat(firstPart, inputBuffer);
-                strcat(firstPart, secondPart);
-                strcpy(memory[line], firstPart);
+                strcpy(memory[line], strcat(strcat(firstPart, inputBuffer), secondPart));
             }
             else
             {
@@ -188,7 +213,7 @@ int main()
             break;
 
         case 'f':
-            int position;
+            unsigned int position;
             bool found;
 
             printf(">Enter text to search: ");
@@ -203,7 +228,7 @@ int main()
                 while (result != NULL)
                 {
                     position = result - memory[i]; 
-                    printf(">Found occurrence at %d %d\n", i, position);
+                    printf(">Found occurrence at %u %u\n", i, position);
                     found = true;
 
                     result = strstr(result + strlen(inputBuffer), inputBuffer);
