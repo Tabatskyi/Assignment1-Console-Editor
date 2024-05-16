@@ -88,6 +88,7 @@ int resizeLength()
             return 1;
         }
         memory[i] = newLine;
+        free(newLine);
     }
 
     currentLenghNum = newLengthNum;
@@ -216,19 +217,15 @@ int main()
             firstPart = (char*)malloc(currentLenghNum * sizeof(char));
             secondPart = (char*)malloc(currentLenghNum * sizeof(char));
 
-            strncpy(firstPart, memory[line], index);
+            strcpy(firstPart, memory[line] + index);
             firstPart[index] = 0;
 
             strcpy(secondPart, memory[line] + index);
 
-            if (strlen(firstPart) + strlen(inputBuffer) + strlen(secondPart) < currentLenghNum)
-            {
-                strcpy(memory[line], strcat(strcat(firstPart, inputBuffer), secondPart));
-            }
-            else
-            {
+            if (strlen(firstPart) + strlen(inputBuffer) + strlen(secondPart) >= currentLenghNum)
                 resizeLength();
-            }
+
+            strcpy(memory[line], strcat(strcat(firstPart, inputBuffer), secondPart));
 
             free(firstPart);
             free(secondPart);
