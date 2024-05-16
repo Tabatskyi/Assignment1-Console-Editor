@@ -21,11 +21,12 @@ void freeMemory()
     free(memory);
 }
 
+
 int initializeMemory() 
 {
     currentLine = 0;
-    currentLinesNum = 10;
-    currentLenghNum = 10;
+    currentLinesNum = 128;
+    currentLenghNum = 256;
 
     memory = (char**)malloc(currentLinesNum * sizeof(char*));
     if (!memory)
@@ -39,7 +40,6 @@ int initializeMemory()
         if (!memory[i]) 
         {
             perror(">Memory allocation failed.\n");
-
             freeMemory();
             return 1;
         }
@@ -49,7 +49,7 @@ int initializeMemory()
 }
 
 
-int changeCapacity() 
+int resizeLines() 
 {
     int newLinesNum = currentLinesNum * 2;
     char** newMemory = (char**)realloc(memory, newLinesNum * sizeof(char*));
@@ -58,20 +58,42 @@ int changeCapacity()
         perror("Memory reallocation failed");
         return 1;
     }
-    memory = newMemory;
+
     for (int i = currentLinesNum; i < newLinesNum; i++) 
     {
-        memory[i] = (char*)malloc(currentLenghNum * sizeof(char));
-        if (!memory[i]) {
+        newMemory[i] = (char*)malloc(currentLenghNum * sizeof(char));
+        if (!newMemory[i]) {
             perror("Memory allocation failed for new lines");
             return 1;
         }
-        memory[i][0] = 0;
+        newMemory[i][0] = '\0';
     }
+
     currentLinesNum = newLinesNum;
-    printf("Changed succesfully");
+    memory = newMemory;
+    printf("Line capacity expanded to %d\n", currentLinesNum);
+    return 0;
 }
 
+
+int resizeLength() 
+{
+    int newLengthNum = currentLenghNum * 2;
+    for (int i = 0; i < currentLinesNum; i++) 
+    {
+        char* newLine = (char*)realloc(memory[i], newLengthNum * sizeof(char));
+        if (!newLine) 
+        {
+            perror("Memory reallocation failed for line resizing");
+            return 1;
+        }
+        memory[i] = newLine;
+    }
+
+    currentLenghNum = newLengthNum;
+    printf("Line length resized to %d\n", currentLenghNum);
+    return 0;
+}
 
 
 int main() 
@@ -101,7 +123,7 @@ int main()
             }
             else
             {
-                changeCapacity();
+                resizeLength();
                 strcat(memory[currentLine], inputBuffer);
             }
             break;
@@ -114,7 +136,7 @@ int main()
             }
             else
             {
-                changeCapacity();
+                resizeLines();
                 currentLine++;
             }
             break;
@@ -154,7 +176,7 @@ int main()
 
                     if (currentLine++ >= currentLinesNum)
                     {
-                        changeCapacity();
+                        resizeLines(); //lenght also should be
                     }
                 }
                 fclose(file);
@@ -183,9 +205,9 @@ int main()
             printf(">Choose line and index: ");
             (void)scanf("%u %u", &line, &index);
 
-            if (line < 0 || line >= currentLinesNum || index < 0 || index >= currentLenghNum)
+            if (line >= currentLinesNum || index >= currentLenghNum)
             {
-                changeCapacity();
+                printf("Error: Index out of range");
             }
 
             printf(">Enter text to insert: ");
@@ -205,7 +227,7 @@ int main()
             }
             else
             {
-                printf(">Error: index out of range\n");
+                resizeLength();
             }
 
             free(firstPart);
