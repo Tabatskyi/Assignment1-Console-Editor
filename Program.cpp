@@ -81,13 +81,15 @@ int resizeLength()
     int newLengthNum = currentLenghNum * 2;
     for (int i = 0; i < currentLinesNum; i++) 
     {
-        char* newLine = (char*)realloc(memory[i], newLengthNum * sizeof(char));
+        char* newLine = (char*)malloc(newLengthNum * sizeof(char));
+        strcpy(newLine, memory[i]);
         if (!newLine) 
         {
             perror("Memory reallocation failed for line resizing");
             return 1;
         }
-        memory[i] = newLine;
+        memory[i] = (char*)malloc(newLengthNum * sizeof(char));
+        strcpy(memory[i], newLine);
         free(newLine);
     }
 
@@ -170,15 +172,14 @@ int main()
             if (file != NULL)
             {
                 currentLine = 0;
-                while (fgets(inputBuffer, currentLenghNum, file) != NULL && currentLine < currentLinesNum)
+                while (fgets(inputBuffer, currentLenghNum, file) != NULL)
                 {
-                    inputBuffer[strlen(inputBuffer) - 1] = 0;
-                    strcpy(memory[currentLine], inputBuffer);
-
                     if (currentLine++ >= currentLinesNum)
                     {
                         resizeLines(); //lenght also should be
                     }
+                    inputBuffer[strlen(inputBuffer) - 1] = 0;
+                    strcpy(memory[currentLine - 1], inputBuffer);
                 }
                 fclose(file);
                 currentLine--;
