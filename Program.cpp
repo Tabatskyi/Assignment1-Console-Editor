@@ -176,7 +176,7 @@ int main()
                 {
                     if (currentLine++ >= currentLinesNum)
                     {
-                        resizeLines(); //lenght also should be
+                        resizeLines(); 
                     }
                     inputBuffer[strlen(inputBuffer) - 1] = 0;
                     strcpy(memory[currentLine - 1], inputBuffer);
