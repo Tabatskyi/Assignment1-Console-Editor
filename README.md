@@ -3,7 +3,7 @@
 Start the program, append random text using command 'a'.
 <img width="675" alt="image" src="https://github.com/Tabatskyi/Assignment1-Console-Editor/assets/115981919/f2242edb-d49f-4d4d-972d-71d784eba3fd">
 
-Print result with command 'p'.
+Print result with command 'p'.                                                                        
 <img width="675" alt="image" src="https://github.com/Tabatskyi/Assignment1-Console-Editor/assets/115981919/f56348a6-ab90-4a17-ab18-90515ff8012c">
 
 Insert the random text to the start using the 'i' command and line '0' and row '0'. Print result with command 'p'.
